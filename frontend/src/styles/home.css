@@ -1,0 +1,122 @@
+.home-container {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.page-content {
+  text-align: center;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.home-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #38bdf8, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-description {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  color: #cbd5f5;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  transition: transform 0.4s ease, background 0.4s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+  color: #ffffff;
+}
+
+.feature-card p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #e5e7eb;
+  margin-bottom: 0.8rem;
+}
+
+.feature-card ul {
+  padding-left: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.feature-card li {
+  font-size: 0.95rem;
+  color: #d1d5db;
+  margin-bottom: 0.4rem;
+}
+
+.feature-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #38bdf8, #9333ea);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(145, 204, 229, 0.5);
+   text-decoration: none;
+}
+
+
+.cta-text {
+  font-size: 1.2rem;
+  margin-top: 3rem;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .home-title {
+    font-size: 2.2rem;
+  }
+
+  .home-description {
+    font-size: 1.1rem;
+  }
+
+  .feature-card {
+    text-align: center;
+  }
+
+  .feature-card ul {
+    padding-left: 0;
+    list-style: none;
+  }
+}
