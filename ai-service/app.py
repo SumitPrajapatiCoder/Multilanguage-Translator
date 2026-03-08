@@ -10,7 +10,7 @@ import requests
 import cloudinary
 import cloudinary.uploader
 
-from pipeline.translator_pipeline import process, process_file
+from pipeline.translator_pipeline import process, process_file, process_stream
 
 app = FastAPI()
 
@@ -35,6 +35,11 @@ class UploadRequest(BaseModel):
     fileUrl: str
     targetLanguage: str
 
+
+class StreamRequest(BaseModel):
+    text: str
+    sourceLanguage: str
+    targetLanguage: str
 
 
 # ================= TEXT TRANSLATE =================
@@ -115,3 +120,18 @@ def upload_from_url(data: UploadRequest):
         "audio_url": upload_res["secure_url"],
         "audio_public_id": upload_res["public_id"],
     }
+
+
+
+
+@app.post("/translate-stream")
+def translate_stream(req: StreamRequest):
+
+    result = process_stream(
+        req.text,
+        req.sourceLanguage,
+        req.targetLanguage
+    )
+
+    return result
+

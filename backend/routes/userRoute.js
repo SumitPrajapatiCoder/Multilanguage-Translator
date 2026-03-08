@@ -15,5 +15,4 @@ router.delete("/delete_profile_image", authMiddleware, deleteProfileImageControl
 router.post("/verify-password", authMiddleware, verifyPasswordController);
 
 
-
 module.exports = router;

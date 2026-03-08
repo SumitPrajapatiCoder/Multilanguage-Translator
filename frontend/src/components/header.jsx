@@ -103,8 +103,24 @@ const Header = () => {
             >
                 History
             </Link>
-           
 
+            <Link
+                to="/create-meeting"
+                onClick={handleLinkClick}
+                className={isActive("/create-meeting") ? "active-link" : ""}
+            >
+                Create Meetings
+            </Link>
+
+            <Link
+                to="/join"
+                onClick={handleLinkClick}
+                className={isActive("/join") ? "active-link" : ""}
+            >
+                Join Meetings
+            </Link>
+            
+          
             {user && (
                 <button
                     className="logout-button"

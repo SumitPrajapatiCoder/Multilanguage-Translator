@@ -8,6 +8,10 @@ import Profile from "./pages/profile";
 import Layout from "./components/layout";
 import Translate from "./pages/translate";
 import History from "./pages/history";
+import CreateMeeting from "./pages/CreateMeeting";
+import JoinMeeting from "./pages/JoinMeeting";
+import JoinById from "./pages/JoinById";
+import MeetingRoom from "./pages/MeetingRoom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,6 +21,43 @@ function App() {
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
+        <Route
+          path="/create-meeting"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CreateMeeting />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/join/:id"
+          element={
+            <ProtectedRoute>
+              <JoinMeeting />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/join"
+          element={
+            <ProtectedRoute>
+              <JoinById />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/meeting"
+          element={
+            <ProtectedRoute>
+              <MeetingRoom />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/home"
           element={

@@ -5,8 +5,7 @@ from models.language_detect import detect_language
 
 #model = whisper.load_model("small")  
 model = whisper.load_model("medium")
-# model = whisper.load_model("large")
-
+#model = whisper.load_model("large")
 
 
 SUPPORTED_AUDIO = (

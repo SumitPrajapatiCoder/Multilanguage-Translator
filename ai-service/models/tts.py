@@ -146,10 +146,90 @@
 
 
 
+# import os
+# import uuid
+# import asyncio
+# import edge_tts
+
+# VOICE_MAP = {
+#     "en": "en-US-AriaNeural",
+#     "hi": "hi-IN-SwaraNeural",
+#     "ta": "ta-IN-PallaviNeural",
+#     "te": "te-IN-ShrutiNeural",
+#     "mr": "mr-IN-AarohiNeural",
+#     "bn": "bn-IN-TanishaaNeural",
+#     "gu": "gu-IN-DhwaniNeural",
+#     "pa": "pa-IN-GaganNeural",
+#     "ml": "ml-IN-SobhanaNeural",
+#     "kn": "kn-IN-SapnaNeural",
+#     "fr": "fr-FR-DeniseNeural",
+#     "es": "es-ES-ElviraNeural",
+#     "de": "de-DE-KatjaNeural",
+#     "ar": "ar-SA-ZariyahNeural",
+#     "zh": "zh-CN-XiaoxiaoNeural",
+#     "ja": "ja-JP-NanamiNeural",
+#     "ko": "ko-KR-SunHiNeural",
+# }
+
+# DEFAULT_VOICE = "en-US-AriaNeural"
+
+
+# async def generate_speech_async(text, language, source_language=None):
+#     os.makedirs("generated_audio", exist_ok=True)
+
+#     voice = VOICE_MAP.get(language, DEFAULT_VOICE)
+
+#     src = source_language.upper() if source_language else "AUTO"
+#     tgt = language.upper()
+
+#     unique_id = str(uuid.uuid4())[:8]
+#     filename = f"{src}_TO_{tgt}_{unique_id}.mp3"
+#     file_path = os.path.join("generated_audio", filename)
+
+#     communicate = edge_tts.Communicate(
+#         text=text,
+#         voice=voice,
+#     )
+
+#     await communicate.save(file_path)
+
+#     return filename
+
+
+# def generate_speech(text, language, source_language=None):
+#     return asyncio.run(generate_speech_async(text, language, source_language))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import edge_tts
+import asyncio
+import base64
+import tempfile
 import os
 import uuid
-import asyncio
-import edge_tts
 
 VOICE_MAP = {
     "en": "en-US-AriaNeural",
@@ -171,26 +251,22 @@ VOICE_MAP = {
     "ko": "ko-KR-SunHiNeural",
 }
 
-DEFAULT_VOICE = "en-US-AriaNeural"
-
 
 async def generate_speech_async(text, language, source_language=None):
+
     os.makedirs("generated_audio", exist_ok=True)
 
-    voice = VOICE_MAP.get(language, DEFAULT_VOICE)
+    voice = VOICE_MAP.get(language, "en-US-AriaNeural")
 
     src = source_language.upper() if source_language else "AUTO"
     tgt = language.upper()
 
     unique_id = str(uuid.uuid4())[:8]
     filename = f"{src}_TO_{tgt}_{unique_id}.mp3"
+
     file_path = os.path.join("generated_audio", filename)
 
-    communicate = edge_tts.Communicate(
-        text=text,
-        voice=voice,
-    )
-
+    communicate = edge_tts.Communicate(text=text, voice=voice)
     await communicate.save(file_path)
 
     return filename
@@ -198,3 +274,27 @@ async def generate_speech_async(text, language, source_language=None):
 
 def generate_speech(text, language, source_language=None):
     return asyncio.run(generate_speech_async(text, language, source_language))
+
+
+
+
+async def generate_speech_stream_async(text, language):
+
+    voice = VOICE_MAP.get(language, "en-US-AriaNeural")
+
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+    tmp.close()
+
+    communicate = edge_tts.Communicate(text=text, voice=voice)
+    await communicate.save(tmp.name)
+
+    with open(tmp.name, "rb") as f:
+        audio_bytes = f.read()
+
+    os.remove(tmp.name)
+
+    return base64.b64encode(audio_bytes).decode()
+
+
+def generate_speech_stream(text, language):
+    return asyncio.run(generate_speech_stream_async(text, language))

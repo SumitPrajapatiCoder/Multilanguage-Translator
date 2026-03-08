@@ -32,6 +32,4 @@ const callAIUploadService = async (fileUrl, targetLanguage) => {
 };
 
 
-
-
 module.exports={callAIService,callAIUploadService}
