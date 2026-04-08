@@ -65,8 +65,6 @@ npm install
 # Run Frontend
 npm run dev
 
-
-
 ## 💻 Usage
 To use the platform, follow these steps:
 1. Create an account by registering on the platform.
@@ -77,33 +75,31 @@ To use the platform, follow these steps:
 6. Use the real-time translation feature by speaking or typing in the chat window.
 
 ## 📂 Project Structure
-```markdown
-ai-service/
-app.py
-models/
-translate.py
-stt.py
-language_detect.py
-tts.py
-pipeline/
-translator_pipeline.py
-frontend/
-src/
-App.jsx
-main.jsx
-services/
-socket.js
-routes/
-publicRoute.jsx
-protectRoute.jsx
-backend/
-server.js
-config/
-db.js
-models/
-translationHistoryModel.js
-meetingModel.js
-```
+├── ai-service/
+│   ├── app.py
+│   ├── models/
+│   │   ├── translate.py
+│   │   ├── stt.py
+│   │   ├── language_detect.py
+│   │   └── tts.py
+│   └── pipeline/
+│       └── translator_pipeline.py
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── services/
+│   │       └── socket.js
+│   └── routes/
+│       ├── publicRoute.jsx
+│       └── protectRoute.jsx
+└── backend/
+    ├── server.js
+    ├── config/
+    │   └── db.js
+    └── models/
+        ├── translationHistoryModel.js
+        └── meetingModel.js
 
 ## 📸 Screenshots
 
