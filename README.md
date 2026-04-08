@@ -23,6 +23,50 @@ To install the platform, follow these steps:
 4. Start the server using `npm start` or `yarn start`.
 5. Access the platform by navigating to `http://localhost:3000` in your web browser.
 
+## 🚀 Project Setup & Run Instructions
+
+### 1️⃣ AI Service (FastAPI)
+```bash
+# Navigate to directory
+cd ai-service
+
+# Create Virtual Environment (First time only)
+python -m venv venv
+
+# Activate Virtual Environment
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# Install Requirements
+pip install -r requirements.txt
+
+# Run FastAPI Server
+python -m uvicorn app:app --port 8000 --reload
+
+### 2️⃣ Backend (Node.js / Express)
+# Navigate to directory
+cd backend
+
+# Install Dependencies
+npm install
+
+# Run Backend Server
+npm run dev
+
+### 3️⃣ Frontend (React / Vite)
+# Navigate to directory
+cd frontend
+
+# Install Dependencies
+npm install
+
+# Run Frontend
+npm run dev
+
+
+
 ## 💻 Usage
 To use the platform, follow these steps:
 1. Create an account by registering on the platform.
