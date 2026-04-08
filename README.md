@@ -32,7 +32,6 @@ To use the platform, follow these steps:
 5. Start the meeting by clicking on the "Start Meeting" button.
 6. Use the real-time translation feature by speaking or typing in the chat window.
 
-## 📂 Project Structure
 
 
 ## 📸 Screenshots
