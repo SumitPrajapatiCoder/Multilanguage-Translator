@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Room, createLocalTracks } from "livekit-client";
 import socket from "../services/socket";
 import axios from "axios";
+import defaultAvatar from "../assets/default-avatar.png";
+import "../styles/meetingRoom.css";
 
 import {
     FaMicrophone,
@@ -12,6 +14,9 @@ import {
     FaVolumeUp,
     FaUser
 } from "react-icons/fa";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const LANG_MAP = {
     en: "English",
@@ -38,7 +43,7 @@ const MeetingRoom = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
 
-    const { token, meetingId, name, language, mode } = state;
+    const { token, meetingId, name, language, mode, gender } = state;
 
     const localVideoRef = useRef(null);
     const videoGridRef = useRef(null);
@@ -59,6 +64,8 @@ const MeetingRoom = () => {
 
     const [participants, setParticipants] = useState([]);
 
+    const MySwal = withReactContent(Swal);
+
     useEffect(() => {
 
         let interval;
@@ -67,6 +74,17 @@ const MeetingRoom = () => {
 
             try {
 
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+
+                if (localVideoRef.current) {
+                    localVideoRef.current.srcObject = stream;
+                    await localVideoRef.current.play();
+                }
+
+               
                 const r = new Room();
 
                 await r.connect(
@@ -116,6 +134,7 @@ const MeetingRoom = () => {
                 });
 
                 setLocalTracks(tracks);
+
                 setRoom(r);
 
             } catch (err) {
@@ -123,6 +142,8 @@ const MeetingRoom = () => {
             }
 
         };
+
+
 
         const checkMeeting = async () => {
 
@@ -139,7 +160,12 @@ const MeetingRoom = () => {
 
                 if (res.data.status === "ended") {
 
-                    alert("Meeting has ended");
+                    await MySwal.fire({
+                        icon: "info",
+                        title: "Meeting Ended",
+                        text: "This meeting has already ended.",
+                        confirmButtonText: "Go Home"
+                    });
 
                     navigate("/home");
 
@@ -148,7 +174,12 @@ const MeetingRoom = () => {
 
                 if (res.data.status === "not_started") {
 
-                    alert("Meeting has not started yet");
+                    await MySwal.fire({
+                        icon: "warning",
+                        title: "Meeting Not Started",
+                        text: "The meeting host has not started the meeting yet.",
+                        confirmButtonText: "Go Home"
+                    });
 
                     navigate("/home");
 
@@ -159,7 +190,12 @@ const MeetingRoom = () => {
 
             } catch {
 
-                alert("Unable to verify meeting");
+                await MySwal.fire({
+                    icon: "error",
+                    title: "Connection Error",
+                    text: "Unable to verify meeting status.",
+                    confirmButtonText: "Go Home"
+                });
 
                 navigate("/home");
 
@@ -180,7 +216,8 @@ const MeetingRoom = () => {
                 meetingId,
                 name,
                 language,
-                mode
+                mode,
+                gender
             });
 
             socket.on("participants-update", (data) => {
@@ -210,7 +247,12 @@ const MeetingRoom = () => {
 
                 if (res.data.status === "ended") {
 
-                    alert("Meeting ended");
+                    await MySwal.fire({
+                        icon: "info",
+                        title: "Meeting Ended",
+                        text: "The host has ended this meeting.",
+                        confirmButtonText: "OK"
+                    });
 
                     if (room) room.disconnect();
 
@@ -242,12 +284,14 @@ const MeetingRoom = () => {
 
     }, []);
 
+
+
     const handleTranslation = (msg) => {
 
         setTranslatedText(msg.text);
         setAudioUrl(msg.audio);
 
-        if (mode !== "text" && msg.audio) {
+        if ((mode === "audio" || mode === "both") && msg.audio) {
 
             const audio = new Audio(msg.audio);
 
@@ -309,31 +353,85 @@ const MeetingRoom = () => {
 
     };
 
+
+
+
     const toggleMic = () => {
 
         localTracks.forEach(track => {
+
             if (track.kind === "audio") {
-                track.enabled = !micOn;
+
+                if (micOn) {
+                    track.mute();
+                } else {
+                    track.unmute();
+                }
+
             }
+
         });
+
+        if (micOn) {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+        }
+        else {
+            startSpeech();
+        }
 
         setMicOn(!micOn);
 
     };
 
+
     const toggleCamera = () => {
 
         localTracks.forEach(track => {
+
             if (track.kind === "video") {
-                track.enabled = !camOn;
+
+                if (camOn) {
+
+                    track.disable();
+
+                    if (localVideoRef.current) {
+                        track.detach(localVideoRef.current);
+                        localVideoRef.current.srcObject = null;
+                    }
+
+                } else {
+
+                    track.enable();
+
+                    if (localVideoRef.current) {
+                        track.attach(localVideoRef.current);
+                    }
+
+                }
+
             }
+
         });
 
         setCamOn(!camOn);
 
     };
 
-    const leaveMeeting = () => {
+
+    const leaveMeeting = async () => {
+
+        const result = await MySwal.fire({
+            title: "Leave meeting?",
+            text: "You will exit the meeting room.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Leave",
+            cancelButtonText: "Stay"
+        });
+
+        if (!result.isConfirmed) return;
 
         if (recognitionRef.current) {
             recognitionRef.current.stop();
@@ -349,82 +447,48 @@ const MeetingRoom = () => {
 
     return (
 
-        <div style={{
-            height: "100vh",
-            background: "linear-gradient(135deg,#0f2027,#203a43,#2c5364)",
-            color: "white",
-            padding: "20px",
-            fontFamily: "sans-serif"
-        }}>
+        <div className="meeting-room-page">
 
-            <h2 style={{ textAlign: "center", letterSpacing: "1px" }}>Meeting Room</h2>
+            <h2 className="meeting-room-title">Meeting Room</h2>
 
-            <div style={{
-                textAlign: "center",
-                marginBottom: "15px",
-                fontSize: "16px",
-                opacity: 0.9
-            }}>
-                <FaUser /> {name} | 🌐 {LANG_MAP[language]}
+            <div className="meeting-room-user">
+                <FaUser /> {name} | {LANG_MAP[language]} | {gender.charAt(0).toUpperCase() + gender.slice(1)}
             </div>
 
-            <div
-                ref={videoGridRef}
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit,300px)",
-                    gap: "15px",
-                    justifyContent: "center",
-                    marginTop: "20px"
-                }}
-            >
+            <div ref={videoGridRef} className="video-grid">
 
-                <video
-                    ref={localVideoRef}
-                    autoPlay
-                    muted
-                    playsInline
-                    style={{
-                        width: "300px",
-                        height: "220px",
-                        borderRadius: "12px",
-                        objectFit: "cover",
-                        background: "black",
-                        boxShadow: "0 8px 25px rgba(0,0,0,0.6)"
-                    }}
-                />
+                {
+                    camOn ? (
+                        <video
+                            ref={localVideoRef}
+                            autoPlay
+                            muted
+                            playsInline
+                            className="video-box"
+                        />
+                    ) : (
+                        <div className="avatar-box">
+                            <img src={defaultAvatar} alt="avatar" className="avatar-img" />
+                            <div>{name}</div>
+                        </div>
+                    )
+                }
 
             </div>
 
-            <div style={{
-                textAlign: "center",
-                marginTop: "20px",
-                padding: "10px",
-                background: "rgba(255,255,255,0.08)",
-                borderRadius: "10px"
-            }}>
-                <b>Mic Preview:</b> {micText}
-            </div>
+            {(mode === "text" || mode === "both") && (
+                <div className="mic-box">
+                    <b>Mic Preview:</b> {micText}
+                </div>
+            )}
 
-            <div style={{
-                textAlign: "center",
-                marginTop: "10px",
-                color: "#00ffc8",
-                padding: "10px",
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: "10px"
-            }}>
-                <b>Translation:</b> {translatedText}
-            </div>
+            {(mode === "text" || mode === "both") && (
+                <div className="translation-box">
+                    <b>Translation:</b> {translatedText}
+                </div>
+            )}
 
-            <div style={{
-                marginTop: "20px",
-                textAlign: "center",
-                padding: "10px",
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: "10px"
-            }}>
-
+            <div className="participants-box">
                 <h3>Participants</h3>
 
                 {participants.map((p, i) => (
@@ -432,38 +496,27 @@ const MeetingRoom = () => {
                         👤 {p.name} — 🌐 {LANG_MAP[p.language]}
                     </div>
                 ))}
-
             </div>
 
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: "25px",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "20px"
-                }}
-            >
+            <div className="controls">
 
-                <button style={btnStyle} onClick={toggleMic}>
-                    {micOn ? <FaMicrophone /> : <FaMicrophoneSlash />} {micOn ? "Mic On" : "Mic Off"}
+                <button className="control-btn" onClick={toggleMic}>
+                    {micOn ? <FaMicrophone /> : <FaMicrophoneSlash />}
+                    {micOn ? "Mic On" : "Mic Off"}
                 </button>
 
-                <button style={btnStyle} onClick={toggleCamera}>
-                    {camOn ? <FaVideo /> : <FaVideoSlash />} {camOn ? "Camera On" : "Camera Off"}
+                <button className="control-btn" onClick={toggleCamera}>
+                    {camOn ? <FaVideo /> : <FaVideoSlash />}
+                    {camOn ? "Camera On" : "Camera Off"}
                 </button>
 
-                <button
-                    onClick={leaveMeeting}
-                    style={{ ...btnStyle, background: "#ff4d4d" }}
-                >
+                <button className="control-btn leave-btn" onClick={leaveMeeting}>
                     Leave
                 </button>
 
-                {audioUrl && (
+                {audioUrl && (mode === "audio" || mode === "both") && (
                     <button
-                        style={btnStyle}
+                        className="control-btn"
                         onClick={() => {
                             const audio = new Audio(audioUrl);
                             audio.play();
@@ -479,20 +532,6 @@ const MeetingRoom = () => {
 
     );
 
-};
-
-const btnStyle = {
-    padding: "10px 18px",
-    borderRadius: "8px",
-    border: "none",
-    background: "#4f46e5",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.4)"
 };
 
 export default MeetingRoom;

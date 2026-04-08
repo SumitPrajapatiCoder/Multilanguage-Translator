@@ -116,7 +116,7 @@ def process_file(file_path, target_language, mode="both"):
 
 
 
-def process_stream(text, source_language, target_language):
+def process_stream(text, source_language, target_language, gender="male"):
 
     print("\n========== STREAM PROCESS START ==========")
     print("Incoming text:", text)
@@ -127,7 +127,7 @@ def process_stream(text, source_language, target_language):
     print("Translated text:", translated)
 
     print("Generating streaming speech...")
-    audio_base64 = generate_speech_stream(translated, target_language)
+    audio_base64 = generate_speech_stream(translated, target_language, gender)
 
     if audio_base64:
         print("Audio stream generated (base64 length):", len(audio_base64))

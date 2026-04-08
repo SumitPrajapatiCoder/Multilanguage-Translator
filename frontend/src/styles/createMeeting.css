@@ -1,0 +1,109 @@
+
+.meeting-container {
+    padding: 40px;
+}
+
+.meeting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ant-table-wrapper {
+    overflow-x: auto;
+}
+
+.join-link-group {
+    display: flex;
+    gap: 8px;
+}
+
+.join-link-group input {
+    flex: 1;
+}
+
+.ant-modal-body {
+    padding: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+@media (max-width: 600px) {
+
+    .meeting-container {
+        padding: 15px;
+    }
+
+    .meeting-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .meeting-header h2 {
+        font-size: 18px;
+    }
+
+    .ant-table {
+        font-size: 12px;
+    }
+
+    .join-link-group {
+        flex-direction: column;
+    }
+
+    .join-link-group input {
+        width: 100%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .action-buttons button {
+        width: 100%;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+    .meeting-container {
+        padding: 25px;
+    }
+
+    .meeting-header h2 {
+        font-size: 22px;
+    }
+
+    .ant-table {
+        font-size: 13px;
+    }
+
+    .join-link-group input {
+        width: 180px;
+    }
+}
+
+@media (min-width: 1025px) {
+
+    .meeting-container {
+        padding: 40px;
+    }
+
+    .meeting-header h2 {
+        font-size: 26px;
+    }
+
+    .ant-table {
+        font-size: 14px;
+    }
+
+    .join-link-group input {
+        width: 220px;
+    }
+}

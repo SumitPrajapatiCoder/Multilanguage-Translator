@@ -5,71 +5,63 @@ import "../styles/home.css";
 const Home = () => {
     return (
         <div className="home-container">
+            <div className="overlay"></div>
+
             <div className="page-content">
                 <h1 className="home-title">
-                    Break Language Barriers in Real-Time 
+                    Real-Time AI Video Translation 
                 </h1>
 
                 <p className="home-description">
-                    Our platform enables people speaking <strong>different languages</strong>
-                    to communicate effortlessly through <strong>real-time video calls</strong>
-                    with instant translation — while also helping users
-                    <strong> learn new languages naturally</strong>.
+                    Talk to anyone, anywhere — in <strong>any language</strong>.
+                    Experience seamless <strong>video calls with live translation</strong>
+                    and learn languages naturally while communicating.
                 </p>
+
+                <div className="cta-buttons">
+                    <Link to="/create-meeting" className="primary-btn">
+                        Start Meeting
+                    </Link>
+
+                    <Link to="/translate" className="secondary-btn">
+                        Learn Language
+                    </Link>
+                </div>
 
                 <div className="features-grid">
                     <div className="feature-card">
-                        <h3>Language Learning Mode</h3>
-                        <p>
-                            Choose any language you want to learn.
-                            Understand how common words, sentences, and conversations
-                            are spoken in your <strong>own language</strong>.
-                        </p>
+                        <h3>AI Language Learning</h3>
+                        <p>Understand conversations in real-time.</p>
                         <ul>
-                            <li>Word-by-word understanding</li>
-                            <li>Real conversation examples</li>
-                            <li>Learn while communicating</li>
+                            <li>Word-by-word meaning</li>
+                            <li>Context-based translation</li>
+                            <li>Learn while speaking</li>
                         </ul>
-                        <Link to="/translate" className="feature-btn">
-                            Start Learning
-                        </Link>
-                        
                     </div>
 
                     <div className="feature-card">
-                        <h3> Multilingual Video Call</h3>
-                        <p>
-                            Join video calls with multiple users — even if everyone
-                            speaks a <strong>different language</strong>.
-                        </p>
+                        <h3> Smart Video Calls</h3>
+                        <p>Multi-user meetings with live translation.</p>
                         <ul>
-                            <li>Live speech-to-text translation</li>
-                            <li>Each user hears in their own language</li>
-                            <li>Perfect for meetings & global teams</li>
+                            <li>Speech → Text → Translation</li>
+                            <li>Auto subtitles</li>
+                            <li>Real-time sync</li>
                         </ul>
-                        <Link to="/video_call" className="feature-btn">
-                            Start Video Call
-                        </Link>
                     </div>
 
                     <div className="feature-card">
-                        <h3>Real-World Use Cases</h3>
-                        <p>
-                            Designed for real communication, not just theory.
-                        </p>
+                        <h3> Global Communication</h3>
+                        <p>Break language barriers completely.</p>
                         <ul>
-                            <li>International meetings</li>
-                            <li>Online learning & teaching</li>
-                            <li>Global collaboration</li>
-                            <li>Language practice with real people</li>
+                            <li>Remote teams</li>
+                            <li>Online education</li>
+                            <li>Cross-country collaboration</li>
                         </ul>
                     </div>
                 </div>
 
                 <p className="cta-text">
-                    Learn languages naturally. Communicate without limits.
-                    <br />
-                    <strong>One platform. Many languages.</strong>
+                    One platform. Infinite conversations.
                 </p>
             </div>
         </div>

@@ -1,97 +1,97 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "../styles/history.css";
+import "../../styles/Userhistory.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useParams, useNavigate } from "react-router-dom";
 
-const History = () => {
+const MySwal = withReactContent(Swal);
+
+const UserHistory = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const token = localStorage.getItem("token");
 
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
 
     const fetchHistory = async () => {
         try {
             setLoading(true);
 
             const res = await axios.get(
-                "/api/v1/history/get_history",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                `/api/v1/admin/user-history/${id}`,
+                config
             );
 
-            setHistory(res.data);
+            setHistory(res.data.data);
         } catch (error) {
-            toast.error("Failed to load history",error);
+            toast.error("Failed to load history");
+
+            if (error.response?.status === 401) {
+                localStorage.clear();
+                window.location.href = "/";
+            }
         } finally {
             setLoading(false);
         }
     };
 
-    const MySwal = withReactContent(Swal);
-
-    const handleDelete = async (id) => {
-
+    const handleDelete = async (historyId) => {
         const result = await MySwal.fire({
-            title: "Are you sure?",
-            text: "This translation will be permanently deleted!",
+            title: "Delete this history?",
+            text: "This action cannot be undone!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Delete",
-            cancelButtonText: "Cancel",
             confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
         });
 
         if (!result.isConfirmed) return;
 
         try {
-            await axios.delete(`/api/v1/history/delete_history/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await axios.delete(
+                `/api/v1/history/delete_history/${historyId}`,
+                config
+            );
 
-            await MySwal.fire({
-                title: "Deleted!",
-                text: "History removed successfully.",
-                icon: "success",
-                timer: 1500,
-                showConfirmButton: false,
-            });
+            MySwal.fire("Deleted!", "History removed", "success");
 
             toast.success("Deleted successfully");
 
-            setHistory((prev) => prev.filter((item) => item._id !== id));
-
+            setHistory((prev) =>
+                prev.filter((item) => item._id !== historyId)
+            );
         } catch (error) {
+            toast.error("Delete failed");
 
-            MySwal.fire({
-                title: "Error!",
-                text: "Failed to delete history.",
-                icon: "error",
-            });
-
-            toast.error("Delete failed"),error;
+            MySwal.fire("Error", "Failed to delete history", error);
         }
     };
 
-
-
-
     useEffect(() => {
         fetchHistory();
-    }, []);
-
+    }, [id]);
 
     return (
         <div className="history-container">
-            <h2>Translation History</h2>
+
+            <button
+                className="back-btn"
+                onClick={() => navigate("/admin/users")}
+            >
+                 Back to Users
+            </button>
+
+            <h2>User Translation History</h2>
 
             {loading ? (
                 <p>Loading...</p>
@@ -113,7 +113,8 @@ const History = () => {
 
                         <div className="history-meta">
                             <span>
-                                {item.detectedLanguage?.toUpperCase()} → {item.targetLanguage?.toUpperCase()}
+                                {item.detectedLanguage?.toUpperCase()} →{" "}
+                                {item.targetLanguage?.toUpperCase()}
                             </span>
                             <span>
                                 {new Date(item.createdAt).toLocaleString()}
@@ -144,7 +145,6 @@ const History = () => {
                         >
                             Delete
                         </button>
-
                     </div>
                 ))
             )}
@@ -152,4 +152,4 @@ const History = () => {
     );
 };
 
-export default History;
+export default UserHistory;

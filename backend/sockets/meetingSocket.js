@@ -9,7 +9,7 @@ module.exports = (io) => {
 
             try {
 
-                const { meetingId, name, language, mode } = data;
+                const { meetingId, name, language, mode, gender } = data;
 
                 socket.join(meetingId);
 
@@ -28,7 +28,8 @@ module.exports = (io) => {
                                 socketId: socket.id,
                                 name,
                                 language,
-                                mode
+                                mode,
+                                gender  
                             }
                         }
                     },

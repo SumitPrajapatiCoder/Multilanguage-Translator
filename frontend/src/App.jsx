@@ -12,6 +12,8 @@ import CreateMeeting from "./pages/CreateMeeting";
 import JoinMeeting from "./pages/JoinMeeting";
 import JoinById from "./pages/JoinById";
 import MeetingRoom from "./pages/MeetingRoom";
+import UserList from "./pages/admin/UserList";
+import UserHistory from "./pages/admin/UserHistory";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -36,7 +38,9 @@ function App() {
           path="/join/:id"
           element={
             <ProtectedRoute>
+              <Layout>
               <JoinMeeting />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -44,7 +48,9 @@ function App() {
           path="/join"
           element={
             <ProtectedRoute>
+              <Layout>
               <JoinById />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -79,6 +85,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+
+        
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute adminOnly>
+              <Layout>
+                <UserList />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/history/:id"
+          element={
+            <ProtectedRoute adminOnly>
+              <Layout>
+                <UserHistory />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
         
          <Route
           path="/translate"

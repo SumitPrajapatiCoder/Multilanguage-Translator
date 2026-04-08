@@ -43,6 +43,12 @@ const meetingSchema = new mongoose.Schema(
                 name: String,
                 language: String,
                 mode: String,
+                gender: {
+                    type: String,
+                    enum: ["male", "female"],
+                    default: "male"
+                },
+
                 joinedAt: {
                     type: Date,
                     default: Date.now

@@ -231,7 +231,7 @@ import tempfile
 import os
 import uuid
 
-VOICE_MAP = {
+VOICE_MAPP = {
     "en": "en-US-AriaNeural",
     "hi": "hi-IN-SwaraNeural",
     "ta": "ta-IN-PallaviNeural",
@@ -251,12 +251,82 @@ VOICE_MAP = {
     "ko": "ko-KR-SunHiNeural",
 }
 
+VOICE_MAP = {
+    "en": {
+        "male": "en-US-GuyNeural",
+        "female": "en-US-AriaNeural"
+    },
+    "hi": {
+        "male": "hi-IN-MadhurNeural",
+        "female": "hi-IN-SwaraNeural"
+    },
+    "mr": {
+        "male": "mr-IN-ManoharNeural",
+        "female": "mr-IN-AarohiNeural"
+    },
+    "ta": {
+        "male": "ta-IN-ValluvarNeural",
+        "female": "ta-IN-PallaviNeural"
+    },
+    "te": {
+        "male": "te-IN-MohanNeural",
+        "female": "te-IN-ShrutiNeural"
+    },
+    "bn": {
+        "male": "bn-IN-BashkarNeural",
+        "female": "bn-IN-TanishaaNeural"
+    },
+    "gu": {
+        "male": "gu-IN-NiranjanNeural",  
+        "female": "gu-IN-DhwaniNeural"
+    },
+    "pa": {
+        "male": "pa-IN-GaganNeural",
+        "female": "pa-IN-GaganNeural"  
+    },
+    "ml": {
+        "male": "ml-IN-MidhunNeural",   
+        "female": "ml-IN-SobhanaNeural"
+    },
+    "kn": {
+        "male": "kn-IN-GaganNeural",    
+        "female": "kn-IN-SapnaNeural"
+    },
+    "fr": {
+        "male": "fr-FR-HenriNeural",
+        "female": "fr-FR-DeniseNeural"
+    },
+    "es": {
+        "male": "es-ES-AlvaroNeural",
+        "female": "es-ES-ElviraNeural"
+    },
+    "de": {
+        "male": "de-DE-ConradNeural",
+        "female": "de-DE-KatjaNeural"
+    },
+    "ar": {
+        "male": "ar-SA-HamedNeural",
+        "female": "ar-SA-ZariyahNeural"
+    },
+    "zh": {
+        "male": "zh-CN-YunxiNeural",
+        "female": "zh-CN-XiaoxiaoNeural"
+    },
+    "ja": {
+        "male": "ja-JP-KeitaNeural",
+        "female": "ja-JP-NanamiNeural"
+    },
+    "ko": {
+        "male": "ko-KR-InJoonNeural",
+        "female": "ko-KR-SunHiNeural"
+    }
+}
 
 async def generate_speech_async(text, language, source_language=None):
 
     os.makedirs("generated_audio", exist_ok=True)
 
-    voice = VOICE_MAP.get(language, "en-US-AriaNeural")
+    voice = VOICE_MAPP.get(language, "en-US-AriaNeural")
 
     src = source_language.upper() if source_language else "AUTO"
     tgt = language.upper()
@@ -278,15 +348,26 @@ def generate_speech(text, language, source_language=None):
 
 
 
-async def generate_speech_stream_async(text, language):
 
-    voice = VOICE_MAP.get(language, "en-US-AriaNeural")
+async def generate_speech_stream_async(text, language, gender="male"):
+
+    voice = VOICE_MAP.get(language, {}).get(
+        gender,
+        "en-US-AriaNeural"
+    )
+
+    print("====== TTS DEBUG ======")
+    print("Language:", language)
+    print("Gender:", gender)
+    print("Voice:", voice)
+    print("=======================")
 
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
     tmp.close()
 
     communicate = edge_tts.Communicate(text=text, voice=voice)
     await communicate.save(tmp.name)
+
 
     with open(tmp.name, "rb") as f:
         audio_bytes = f.read()
@@ -296,5 +377,5 @@ async def generate_speech_stream_async(text, language):
     return base64.b64encode(audio_bytes).decode()
 
 
-def generate_speech_stream(text, language):
-    return asyncio.run(generate_speech_stream_async(text, language))
+def generate_speech_stream(text, language, gender="male"):
+    return asyncio.run(generate_speech_stream_async(text, language, gender))

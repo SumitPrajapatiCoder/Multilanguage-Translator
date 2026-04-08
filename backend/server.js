@@ -26,6 +26,7 @@ app.use("/api/v1/language", require("./routes/translateRoutes"));
 app.use("/api/v1/uploadTrans", require("./routes/uploadRoute"));
 app.use("/api/v1/history", require("./routes/historyRoute"));
 app.use("/api/v1/meeting", require("./routes/meetingRoutes"));
+app.use("/api/v1/admin", require("./routes/adminRoute"));
 
 const server = http.createServer(app);
 

@@ -29,7 +29,8 @@ async function processQueue(io) {
                         {
                             text,
                             sourceLanguage: sourceLang,
-                            targetLanguage: p.language
+                            targetLanguage: p.language,
+                            gender: p.gender || "male"
                         }
                     );
 

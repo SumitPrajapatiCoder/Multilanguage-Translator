@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/joinById.css";
 
 const JoinById = () => {
 
@@ -7,33 +8,31 @@ const JoinById = () => {
     const navigate = useNavigate();
 
     const join = () => {
-
         if (!meetingId.trim()) return;
-
         navigate(`/join/${meetingId}`);
-
     };
 
     return (
 
-        <div style={styles.page}>
+        <div className="join-page">
 
-            <div style={styles.card}>
+            <div className="join-card">
 
-                <h2 style={styles.title}>Join a Meeting</h2>
+                <h2 className="join-title">Join a Meeting</h2>
 
-                <p style={styles.subtitle}>
-                    Enter the meeting ID
+                <p className="join-subtitle">
+                    Enter the meeting ID Provided by the host to join the meeting
                 </p>
 
                 <input
-                    style={styles.input}
+                    className="join-input"
                     placeholder="Enter Meeting ID"
+                    value={meetingId}
                     onChange={(e) => setMeetingId(e.target.value)}
                 />
 
                 <button
-                    style={styles.button}
+                    className="join-button"
                     onClick={join}
                 >
                     Join Meeting
@@ -44,63 +43,6 @@ const JoinById = () => {
         </div>
 
     );
-
-};
-
-
-const styles = {
-
-    page: {
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "linear-gradient(135deg, #667eea, #764ba2)",
-        fontFamily: "sans-serif"
-    },
-
-    card: {
-        width: "360px",
-        padding: "40px",
-        borderRadius: "14px",
-        background: "white",
-        boxShadow: "0 15px 35px rgba(0,0,0,0.2)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-        textAlign: "center"
-    },
-
-    title: {
-        marginBottom: "5px"
-    },
-
-    subtitle: {
-        fontSize: "14px",
-        color: "#666",
-        marginBottom: "10px"
-    },
-
-    input: {
-        padding: "12px",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        fontSize: "14px"
-    },
-
-    button: {
-        marginTop: "10px",
-        padding: "12px",
-        borderRadius: "8px",
-        border: "none",
-        background: "#4f46e5",
-        color: "white",
-        fontWeight: "bold",
-        fontSize: "15px",
-        cursor: "pointer",
-        transition: "all 0.3s ease"
-    }
-
 };
 
 export default JoinById;

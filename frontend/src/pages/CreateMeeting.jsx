@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import "../styles/createMeeting.css";
 
 import {
     Table,
@@ -12,7 +13,11 @@ import {
     Tag
 } from "antd";
 
+import { FaCopy } from "react-icons/fa";
+
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const { RangePicker } = DatePicker;
 
@@ -26,40 +31,24 @@ const CreateMeeting = () => {
 
     const token = localStorage.getItem("token");
 
-
+    const MySwal = withReactContent(Swal);
 
     /* LOAD MEETINGS */
     const loadMeetings = async () => {
-
         try {
-
-            const res = await axios.get(
-                "/api/v1/meeting/list",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
+            const res = await axios.get("/api/v1/meeting/list", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setMeetings(res.data);
-
         } catch {
             toast.error("Failed to load meetings");
         }
-
     };
-
-
 
     useEffect(() => {
         loadMeetings();
     }, []);
 
-
-
-
-    /* CREATE MEETING */
     const createMeeting = async () => {
 
         if (!title.trim()) {
@@ -73,7 +62,6 @@ const CreateMeeting = () => {
         }
 
         try {
-
             await axios.post(
                 "/api/v1/meeting/create",
                 {
@@ -82,9 +70,7 @@ const CreateMeeting = () => {
                     endTime: times[1]
                 },
                 {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 }
             );
 
@@ -99,80 +85,95 @@ const CreateMeeting = () => {
         } catch {
             toast.error("Create meeting failed");
         }
-
     };
 
-
-
-
-    /* END MEETING */
     const endMeeting = async (meetingId) => {
 
-        try {
+        const result = await MySwal.fire({
+            title: "End this meeting?",
+            text: "All participants will be disconnected.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            confirmButtonText: "Yes, End Meeting",
+            cancelButtonText: "Cancel"
+        });
 
+        if (!result.isConfirmed) return;
+
+        try {
             await axios.post(
                 "/api/v1/meeting/end",
                 { meetingId },
                 {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 }
             );
 
             toast.success("Meeting ended");
-
             loadMeetings();
 
         } catch {
             toast.error("Failed to end meeting");
         }
-
     };
 
-
-
-
-    /* DELETE MEETING */
     const deleteMeeting = async (meetingId) => {
 
-        try {
+        const result = await MySwal.fire({
+            title: "Delete this meeting?",
+            text: "This action cannot be undone.",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            confirmButtonText: "Yes, Delete",
+            cancelButtonText: "Cancel"
+        });
 
+        if (!result.isConfirmed) return;
+
+        try {
             await axios.delete(
                 "/api/v1/meeting/delete",
                 {
                     data: { meetingId },
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 }
             );
 
             toast.success("Meeting deleted");
-
             loadMeetings();
 
         } catch {
             toast.error("Delete meeting failed");
         }
-
     };
 
-
-
-    /* TABLE COLUMNS */
     const columns = [
-
         {
             title: "Meeting ID",
-            dataIndex: "meetingId"
+            render: (m) => (
+                <Space>
+                    <Input
+                        value={m.meetingId}
+                        readOnly
+                        style={{ width: 150 }}
+                    />
+                    <Button
+                        onClick={() => {
+                            navigator.clipboard.writeText(m.meetingId);
+                            toast.success("Meeting ID copied");
+                        }}
+                    >
+                        <FaCopy />
+                    </Button>
+                </Space>
+            )
         },
-
         {
             title: "Title",
             dataIndex: "title"
         },
-
         {
             title: "Start Time",
             render: (m) =>
@@ -180,7 +181,6 @@ const CreateMeeting = () => {
                     ? dayjs(m.startTime).format("DD MMM YYYY HH:mm")
                     : "-"
         },
-
         {
             title: "End Time",
             render: (m) =>
@@ -188,11 +188,9 @@ const CreateMeeting = () => {
                     ? dayjs(m.endTime).format("DD MMM YYYY HH:mm")
                     : "-"
         },
-
         {
             title: "Status",
             render: (m) => {
-
                 if (m.status === "ended")
                     return <Tag color="red">ENDED</Tag>;
 
@@ -200,43 +198,34 @@ const CreateMeeting = () => {
                     return <Tag color="orange">SCHEDULED</Tag>;
 
                 return <Tag color="green">ACTIVE</Tag>;
-
             }
         },
-
         {
             title: "Join Link",
             render: (m) => (
-
-                <Space>
-
+                <Space className="join-link-group">
                     <Input
                         value={`http://localhost:5173/join/${m.meetingId}`}
                         readOnly
-                        style={{ width: 220 }}
                     />
-
                     <Button
                         type="primary"
-                        onClick={() =>
+                        onClick={() => {
                             navigator.clipboard.writeText(
                                 `http://localhost:5173/join/${m.meetingId}`
-                            )
-                        }
+                            );
+                            toast.success("Link copied");
+                        }}
                     >
-                        Copy
+                        <FaCopy />
                     </Button>
-
                 </Space>
-
             )
         },
-
         {
             title: "Action",
             render: (m) => (
-
-                <Space>
+                <Space className="action-buttons">
 
                     {m.status !== "ended" && (
                         <Button
@@ -256,49 +245,29 @@ const CreateMeeting = () => {
                     </Button>
 
                 </Space>
-
             )
         }
-
     ];
 
-
-
     return (
+        <div className="meeting-container">
 
-        <div style={{ padding: 40 }}>
-
-            <Space
-                style={{
-                    width: "100%",
-                    justifyContent: "space-between",
-                    marginBottom: 20
-                }}
-            >
-
+            {/* HEADER */}
+            <div className="meeting-header">
                 <h2>Meetings</h2>
 
-                <Button
-                    type="primary"
-                    onClick={() => setOpen(true)}
-                >
+                <Button type="primary" onClick={() => setOpen(true)}>
                     Create Meeting
                 </Button>
-
-            </Space>
-
-
+            </div>
 
             <Table
                 columns={columns}
                 dataSource={meetings}
                 rowKey="_id"
                 bordered
+                scroll={{ x: true }}  
             />
-
-
-
-            {/* CREATE MEETING MODAL */}
 
             <Modal
                 title="Create Meeting"
@@ -308,13 +277,11 @@ const CreateMeeting = () => {
                 centered
                 width={500}
             >
-
                 <Space
                     direction="vertical"
                     style={{ width: "100%" }}
                     size="large"
                 >
-
                     <Input
                         placeholder="Meeting Title"
                         value={title}
@@ -336,37 +303,29 @@ const CreateMeeting = () => {
                                 value[0].format("YYYY-MM-DD HH:mm:ss"),
                                 value[1].format("YYYY-MM-DD HH:mm:ss")
                             ]);
-
                         }}
                     />
 
-
-
-                    {/* ACTION BUTTONS */}
-
-                    <Space style={{ justifyContent: "flex-end", width: "100%" }}>
-
+                    <Space
+                        style={{
+                            justifyContent: "flex-end",
+                            width: "100%"
+                        }}
+                    >
                         <Button onClick={() => setOpen(false)}>
                             Cancel
                         </Button>
 
-                        <Button
-                            type="primary"
-                            onClick={createMeeting}
-                        >
+                        <Button type="primary" onClick={createMeeting}>
                             Create Meeting
                         </Button>
-
                     </Space>
 
                 </Space>
-
             </Modal>
 
         </div>
-
     );
-
 };
 
 export default CreateMeeting;

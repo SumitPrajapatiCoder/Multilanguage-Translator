@@ -1,0 +1,41 @@
+.userlist-title {
+  text-align: center;   
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.table-container {
+  padding: 15px;
+  overflow-x: auto;   
+  background: #fff;
+  border-radius: 6px;
+}
+
+.ant-table {
+  min-width: 900px;  
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;  
+}
+
+.ant-table-thead > tr > th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .ant-table {
+    font-size: 12px;
+  }
+}

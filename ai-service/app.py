@@ -40,9 +40,9 @@ class StreamRequest(BaseModel):
     text: str
     sourceLanguage: str
     targetLanguage: str
+    gender: Optional[str] = "male" 
 
 
-# ================= TEXT TRANSLATE =================
 
 @app.post("/translate")
 def translate_api(req: Request):
@@ -54,7 +54,6 @@ def translate_api(req: Request):
         req.inputLanguage
     )
 
-    # If speech generated → upload to Cloudinary
     audio_url = None
     audio_public_id = None
 
@@ -83,7 +82,6 @@ def translate_api(req: Request):
 
 # ================= FILE TRANSLATE (Cloudinary URL) =================
 
-
 @app.post("/upload")
 def upload_from_url(data: UploadRequest):
 
@@ -92,7 +90,6 @@ def upload_from_url(data: UploadRequest):
 
     response = requests.get(file_url)
 
-    # 🔥 FIX HERE
     file_extension = os.path.splitext(file_url)[1]
 
     temp_file = tempfile.NamedTemporaryFile(
@@ -123,14 +120,14 @@ def upload_from_url(data: UploadRequest):
 
 
 
-
 @app.post("/translate-stream")
 def translate_stream(req: StreamRequest):
 
     result = process_stream(
         req.text,
         req.sourceLanguage,
-        req.targetLanguage
+        req.targetLanguage,
+        req.gender
     )
 
     return result

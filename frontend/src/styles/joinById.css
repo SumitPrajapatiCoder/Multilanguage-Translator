@@ -1,0 +1,94 @@
+
+.join-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+.join-card {
+    width: 360px;
+    padding: 40px;
+    border-radius: 14px;
+    background: white;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+}
+
+.join-title {
+    margin-bottom: 5px;
+}
+
+.join-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.join-input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.join-button {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 600px) {
+
+    .join-card {
+        width: 100%;
+        padding: 25px;
+    }
+
+    .join-title {
+        font-size: 20px;
+    }
+
+    .join-subtitle {
+        font-size: 13px;
+    }
+
+    .join-input {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .join-button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+    .join-card {
+        width: 400px;
+        padding: 35px;
+    }
+}
+
+@media (min-width: 1025px) {
+
+    .join-card {
+        width: 360px;
+    }
+}

@@ -72,6 +72,16 @@ const Header = () => {
 
     const MenuLinks = () => (
         <>
+            {user?.isAdmin && (
+                <Link
+                    to="/admin/users"
+                    onClick={handleLinkClick}
+                    className={isActive("/admin/users") ? "active-link" : ""}
+                >
+                    Admin Panel
+                </Link>
+            )}
+            
             <Link
                 to="/home"
                 onClick={handleLinkClick}
@@ -119,7 +129,8 @@ const Header = () => {
             >
                 Join Meetings
             </Link>
-            
+
+           
           
             {user && (
                 <button
@@ -140,7 +151,7 @@ const Header = () => {
             <div className="left">
                 {!isMobile && (
                     <Link to="/home" className="brand-link">
-                        <span className="brand-text">Multi-Languague</span>
+                        <span className="brand-text">Multi-Language</span>
                     </Link>
                 )}
                 {isMobile && (
