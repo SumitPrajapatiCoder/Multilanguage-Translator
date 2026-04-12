@@ -41,9 +41,18 @@ const JoinMeeting = () => {
                 }
             );
 
+            const lk_token = res.data.token; 
+
+            localStorage.setItem("lk_token", lk_token);
+            localStorage.setItem("meetingId", cleanId);
+            localStorage.setItem("name", name);
+            localStorage.setItem("language", language);
+            localStorage.setItem("mode", mode);
+            localStorage.setItem("gender", gender);
+
             navigate("/meeting", {
                 state: {
-                    token: res.data.token,
+                    lkToken: lk_token,
                     meetingId: cleanId,
                     name,
                     language,

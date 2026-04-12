@@ -107,6 +107,9 @@
     background: #ff4d4d;
 }
 
+
+
+
 @media (max-width: 600px) {
 
     .video-grid {
@@ -143,3 +146,5 @@
         height: 200px;
     }
 }
+
+

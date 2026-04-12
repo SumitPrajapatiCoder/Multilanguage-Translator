@@ -117,10 +117,11 @@ const joinMeeting = async (req, res) => {
                 error: "Meeting already ended"
             });
 
-        const token = createToken(meetingId, name);
+
+        const livekitToken = await createToken(meetingId, name);
 
         res.json({
-            token,
+            token: livekitToken,
             meetingId
         });
 

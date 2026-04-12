@@ -12,7 +12,14 @@ async function processQueue(io) {
 
         const job = queue.shift();
 
-        const { roomId, text, sourceLang, participants, speakerId } = job;
+        const {
+            roomId,
+            text,
+            sourceLang,
+            participants,
+            speakerId,
+            speakerGender  
+        } = job;
 
         const targets = participants.filter(p =>
             p.socketId !== speakerId &&
@@ -22,6 +29,30 @@ async function processQueue(io) {
         await Promise.all(
             targets.map(async (p) => {
 
+                // try {
+
+                //     const res = await axios.post(
+                //         "http://127.0.0.1:8000/translate-stream",
+                //         {
+                //             text,
+                //             sourceLanguage: sourceLang,
+                //             targetLanguage: p.language,
+                //             gender: speakerGender  
+                //         }
+                //     );
+
+                //     io.to(p.socketId).emit("translated-text", {
+                //         text: res.data.translated_text,
+                //         audio: "data:audio/mp3;base64," + res.data.audio_base64,
+                //         speakerId
+                //     });
+
+                // } catch (err) {
+                //     console.error("Translation error:", err.message);
+                // }
+
+
+
                 try {
 
                     const res = await axios.post(
@@ -29,14 +60,17 @@ async function processQueue(io) {
                         {
                             text,
                             sourceLanguage: sourceLang,
-                            targetLanguage: p.language,
-                            gender: p.gender || "male"
+                            targetLanguage: targets[0]?.language, // just one
+                            gender: speakerGender
                         }
                     );
 
-                    io.to(p.socketId).emit("translated-text", {
-                        text: res.data.translated_text,
-                        audio: "data:audio/mp3;base64," + res.data.audio_base64
+                    targets.forEach((p) => {
+                        io.to(p.socketId).emit("translated-text", {
+                            text: res.data.translated_text,
+                            audio: "data:audio/mp3;base64," + res.data.audio_base64,
+                            speakerId
+                        });
                     });
 
                 } catch (err) {
@@ -45,10 +79,12 @@ async function processQueue(io) {
 
             })
         );
-
     }
 
     processing = false;
 }
+
+
+
 
 module.exports = { queue, processQueue };

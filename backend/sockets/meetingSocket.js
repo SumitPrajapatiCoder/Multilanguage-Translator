@@ -58,15 +58,25 @@ module.exports = (io) => {
 
             const { meetingId, text, language } = data;
 
-            const meeting =
-                await meetingModel.findOne({ meetingId });
+            const meeting = await meetingModel.findOne({ meetingId });
+
+            if (!meeting) return;
+
+            const speaker = meeting.participants.find(
+                p => p.socketId === socket.id
+            );
+
+            if (!speaker) return;
+
+            const speakerGender = speaker.gender || "male";
 
             queue.push({
                 roomId: meetingId,
                 text,
                 sourceLang: language,
                 participants: meeting.participants,
-                speakerId: socket.id
+                speakerId: socket.id,
+                speakerGender   
             });
 
             processQueue(io);

@@ -15,6 +15,7 @@ const Translate = () => {
   const [step, setStep] = useState(1);
 
   const [modeType, setModeType] = useState("text");
+  // eslint-disable-next-line no-unused-vars
   const [originalText, setOriginalText] = useState("");
 
   const [text, setText] = useState("");
@@ -26,7 +27,8 @@ const Translate = () => {
   const [status, setStatus] = useState("idle");
   const [loading, setLoading] = useState(false);
   const [detectedLang, setDetectedLang] = useState(null);
-
+  
+  // eslint-disable-next-line no-unused-vars
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [canReplay, setCanReplay] = useState(false);
   const [recording, setRecording] = useState(false);
