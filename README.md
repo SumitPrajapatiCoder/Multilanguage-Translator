@@ -32,6 +32,8 @@ To use the platform, follow these steps:
 5. Start the meeting by clicking on the "Start Meeting" button.
 6. Use the real-time translation feature by speaking or typing in the chat window.
 
+## WorkFlow Diagram
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/4a369e7e-6210-4f06-9c58-c3f10a5bf574" />
 
 
 ## 📸 Screenshots
