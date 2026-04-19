@@ -60,4 +60,13 @@ To use the platform, follow these steps:
 
 <img width="427" height="589" alt="image" src="https://github.com/user-attachments/assets/89276280-2ab9-48ab-8e7a-c0274fdc3162" />
 
+<img width="1275" height="594" alt="image" src="https://github.com/user-attachments/assets/b9843354-14fc-4388-b54c-f61fc96b4bd5" />
+
+<img width="1200" height="572" alt="image" src="https://github.com/user-attachments/assets/e51ef4c4-dda7-4a09-b1a1-b481aeb6a484" />
+
 <img width="523" height="367" alt="image" src="https://github.com/user-attachments/assets/9b5c656b-d5c7-4a47-bd5c-4a19d225464a" />
+
+<img width="1335" height="482" alt="image" src="https://github.com/user-attachments/assets/26a792eb-3a95-4aee-8588-1aa5aeab2945" />
+
+<img width="809" height="470" alt="image" src="https://github.com/user-attachments/assets/a959d24d-35fc-4565-89f8-750ac0fd40b7" />
+
