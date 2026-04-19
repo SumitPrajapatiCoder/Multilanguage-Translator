@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/translate.css";
@@ -154,7 +154,7 @@ const Translate = () => {
         mode: "both",
       };
 
-      const res = await axios.post(
+      const res = await api.post(
         "/api/v1/language/translate",
         payload,
         {
@@ -199,7 +199,7 @@ const Translate = () => {
       formData.append("file", file);
       formData.append("targetLanguage", targetLang);
 
-      const res = await axios.post(
+      const res = await api.post(
         "/api/v1/uploadTrans/uploadFiles",
         formData,
         {

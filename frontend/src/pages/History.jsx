@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import "../styles/history.css";
 import Swal from "sweetalert2";
@@ -16,7 +16,7 @@ const History = () => {
         try {
             setLoading(true);
 
-            const res = await axios.get(
+            const res = await api.get(
                 "/api/v1/history/get_history",
                 {
                     headers: {
@@ -51,7 +51,7 @@ const History = () => {
         if (!result.isConfirmed) return;
 
         try {
-            await axios.delete(`/api/v1/history/delete_history/${id}`, {
+            await api.delete(`/api/v1/history/delete_history/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

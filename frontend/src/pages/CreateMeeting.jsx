@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import "../styles/createMeeting.css";
 
@@ -36,7 +36,7 @@ const CreateMeeting = () => {
     /* LOAD MEETINGS */
     const loadMeetings = async () => {
         try {
-            const res = await axios.get("/api/v1/meeting/list", {
+            const res = await api.get("/api/v1/meeting/list", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMeetings(res.data);
@@ -62,7 +62,7 @@ const CreateMeeting = () => {
         }
 
         try {
-            await axios.post(
+            await api.post(
                 "/api/v1/meeting/create",
                 {
                     title,
@@ -102,7 +102,7 @@ const CreateMeeting = () => {
         if (!result.isConfirmed) return;
 
         try {
-            await axios.post(
+            await api.post(
                 "/api/v1/meeting/end",
                 { meetingId },
                 {
@@ -133,7 +133,7 @@ const CreateMeeting = () => {
         if (!result.isConfirmed) return;
 
         try {
-            await axios.delete(
+            await api.delete(
                 "/api/v1/meeting/delete",
                 {
                     data: { meetingId },

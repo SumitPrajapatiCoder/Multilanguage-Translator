@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../api";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +22,7 @@ const Register = () => {
 
         setLoading(true);
         try {
-            const res = await axios.post("/api/v1/user/register", form);
+            const res = await api.post("/api/v1/user/register", form);
 
             if (res.data.success) {
                 toast.success("Registration Successful!");

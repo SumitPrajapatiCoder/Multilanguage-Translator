@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Room, createLocalTracks } from "livekit-client";
 import socket from "../services/socket";
-import axios from "axios";
+import api from "../api";
 import defaultAvatar from "../assets/default-avatar.png";
 import "../styles/meetingRoom.css";
 
@@ -241,7 +241,7 @@ const MeetingRoom = () => {
         };
         const checkMeeting = async () => {
             try {
-                const res = await axios.get(`/api/v1/meeting/status/${meetingId}`, {
+                const res = await api.get(`/api/v1/meeting/status/${meetingId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
                 });
 
@@ -284,7 +284,7 @@ const MeetingRoom = () => {
 
         interval = setInterval(async () => {
             try {
-                const res = await axios.get(`/api/v1/meeting/status/${meetingId}`, {
+                const res = await api.get(`/api/v1/meeting/status/${meetingId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
                 });
 

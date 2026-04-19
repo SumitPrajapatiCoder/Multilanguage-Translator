@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "../styles/joinMeeting.css";
@@ -25,7 +25,7 @@ const JoinMeeting = () => {
 
             const cleanId = id.trim();
 
-            const res = await axios.post(
+            const res = await api.post(
                 "/api/v1/meeting/join",
                 {
                     meetingId: cleanId,

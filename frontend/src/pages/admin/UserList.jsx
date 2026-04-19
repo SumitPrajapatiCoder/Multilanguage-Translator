@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import "../../styles/UserList.css";
 import { toast } from "react-toastify";
 import { Table, Button, Tag, Space } from "antd";
@@ -32,7 +32,7 @@ const UserList = () => {
 
     const fetchCurrentUser = async () => {
         try {
-            const res = await axios.post(
+            const res = await api.post(
                 "/api/v1/user/get_User_data",
                 {},
                 config
@@ -45,7 +45,7 @@ const UserList = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get("/api/v1/admin/users", config);
+            const res = await api.get("/api/v1/admin/users", config);
             setUsers(res.data.data);
         } catch (err) {
             toast.error(err.response?.data?.message || "Unauthorized");
@@ -76,7 +76,7 @@ const UserList = () => {
         if (!result.isConfirmed) return;
 
         try {
-            const res = await axios.put(
+            const res = await api.put(
                 `/api/v1/admin/block-user/${user._id}`,
                 {},
                 config
@@ -105,7 +105,7 @@ const UserList = () => {
         if (!result.isConfirmed) return;
 
         try {
-            const res = await axios.delete(
+            const res = await api.delete(
                 `/api/v1/admin/delete-user/${user._id}`,
                 config
             );
@@ -133,7 +133,7 @@ const UserList = () => {
         if (!result.isConfirmed) return;
 
         try {
-            const res = await axios.put(
+            const res = await api.put(
                 `/api/v1/admin/toggle-admin/${user._id}`,
                 {},
                 config
