@@ -3,7 +3,7 @@ import os
 import re
 from models.language_detect import detect_language
  
-model = whisper.load_model("medium")
+model = whisper.load_model("base")
 
 
 SUPPORTED_AUDIO = (

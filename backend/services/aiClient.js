@@ -5,7 +5,7 @@ const fs = require("fs");
 const callAIService = async (payload) => {
     try {
         const res = await axios.post(
-            "http://127.0.0.1:8000/translate",
+            process.env.AI_SERVICE_URL + "/translate",
             payload
         );
         return res.data;
@@ -21,7 +21,7 @@ const callAIService = async (payload) => {
 
 const callAIUploadService = async (fileUrl, targetLanguage) => {
     const res = await axios.post(
-        "http://127.0.0.1:8000/upload",
+        process.env.AI_SERVICE_URL + "/upload",
         {
             fileUrl,
             targetLanguage,

@@ -29,34 +29,10 @@ async function processQueue(io) {
         await Promise.all(
             targets.map(async (p) => {
 
-                // try {
-
-                //     const res = await axios.post(
-                //         "http://127.0.0.1:8000/translate-stream",
-                //         {
-                //             text,
-                //             sourceLanguage: sourceLang,
-                //             targetLanguage: p.language,
-                //             gender: speakerGender  
-                //         }
-                //     );
-
-                //     io.to(p.socketId).emit("translated-text", {
-                //         text: res.data.translated_text,
-                //         audio: "data:audio/mp3;base64," + res.data.audio_base64,
-                //         speakerId
-                //     });
-
-                // } catch (err) {
-                //     console.error("Translation error:", err.message);
-                // }
-
-
-
                 try {
 
                     const res = await axios.post(
-                        "http://127.0.0.1:8000/translate-stream",
+                        process.env.AI_SERVICE_URL + "/translate-stream",
                         {
                             text,
                             sourceLanguage: sourceLang,
