@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../api";
+import api from "../../api";
 import { toast } from "react-toastify";
 import "../../styles/Userhistory.css";
 import Swal from "sweetalert2";
