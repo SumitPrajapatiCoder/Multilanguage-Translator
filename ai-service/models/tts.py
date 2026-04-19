@@ -224,12 +224,28 @@
 
 
 
+
+
 import edge_tts
 import asyncio
 import base64
-import tempfile
-import os
 import uuid
+from io import BytesIO
+from dotenv import load_dotenv
+load_dotenv()
+
+
+import cloudinary
+import cloudinary.uploader
+import os
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
+
+
 
 VOICE_MAPP = {
     "en": "en-US-AriaNeural",
@@ -252,79 +268,27 @@ VOICE_MAPP = {
 }
 
 VOICE_MAP = {
-    "en": {
-        "male": "en-US-GuyNeural",
-        "female": "en-US-AriaNeural"
-    },
-    "hi": {
-        "male": "hi-IN-MadhurNeural",
-        "female": "hi-IN-SwaraNeural"
-    },
-    "mr": {
-        "male": "mr-IN-ManoharNeural",
-        "female": "mr-IN-AarohiNeural"
-    },
-    "ta": {
-        "male": "ta-IN-ValluvarNeural",
-        "female": "ta-IN-PallaviNeural"
-    },
-    "te": {
-        "male": "te-IN-MohanNeural",
-        "female": "te-IN-ShrutiNeural"
-    },
-    "bn": {
-        "male": "bn-IN-BashkarNeural",
-        "female": "bn-IN-TanishaaNeural"
-    },
-    "gu": {
-        "male": "gu-IN-NiranjanNeural",  
-        "female": "gu-IN-DhwaniNeural"
-    },
-    "pa": {
-        "male": "pa-IN-GaganNeural",
-        "female": "pa-IN-GaganNeural"  
-    },
-    "ml": {
-        "male": "ml-IN-MidhunNeural",   
-        "female": "ml-IN-SobhanaNeural"
-    },
-    "kn": {
-        "male": "kn-IN-GaganNeural",    
-        "female": "kn-IN-SapnaNeural"
-    },
-    "fr": {
-        "male": "fr-FR-HenriNeural",
-        "female": "fr-FR-DeniseNeural"
-    },
-    "es": {
-        "male": "es-ES-AlvaroNeural",
-        "female": "es-ES-ElviraNeural"
-    },
-    "de": {
-        "male": "de-DE-ConradNeural",
-        "female": "de-DE-KatjaNeural"
-    },
-    "ar": {
-        "male": "ar-SA-HamedNeural",
-        "female": "ar-SA-ZariyahNeural"
-    },
-    "zh": {
-        "male": "zh-CN-YunxiNeural",
-        "female": "zh-CN-XiaoxiaoNeural"
-    },
-    "ja": {
-        "male": "ja-JP-KeitaNeural",
-        "female": "ja-JP-NanamiNeural"
-    },
-    "ko": {
-        "male": "ko-KR-InJoonNeural",
-        "female": "ko-KR-SunHiNeural"
-    }
+    "en": {"male": "en-US-GuyNeural", "female": "en-US-AriaNeural"},
+    "hi": {"male": "hi-IN-MadhurNeural", "female": "hi-IN-SwaraNeural"},
+    "mr": {"male": "mr-IN-ManoharNeural", "female": "mr-IN-AarohiNeural"},
+    "ta": {"male": "ta-IN-ValluvarNeural", "female": "ta-IN-PallaviNeural"},
+    "te": {"male": "te-IN-MohanNeural", "female": "te-IN-ShrutiNeural"},
+    "bn": {"male": "bn-IN-BashkarNeural", "female": "bn-IN-TanishaaNeural"},
+    "gu": {"male": "gu-IN-NiranjanNeural", "female": "gu-IN-DhwaniNeural"},
+    "pa": {"male": "pa-IN-GaganNeural", "female": "pa-IN-GaganNeural"},
+    "ml": {"male": "ml-IN-MidhunNeural", "female": "ml-IN-SobhanaNeural"},
+    "kn": {"male": "kn-IN-GaganNeural", "female": "kn-IN-SapnaNeural"},
+    "fr": {"male": "fr-FR-HenriNeural", "female": "fr-FR-DeniseNeural"},
+    "es": {"male": "es-ES-AlvaroNeural", "female": "es-ES-ElviraNeural"},
+    "de": {"male": "de-DE-ConradNeural", "female": "de-DE-KatjaNeural"},
+    "ar": {"male": "ar-SA-HamedNeural", "female": "ar-SA-ZariyahNeural"},
+    "zh": {"male": "zh-CN-YunxiNeural", "female": "zh-CN-XiaoxiaoNeural"},
+    "ja": {"male": "ja-JP-KeitaNeural", "female": "ja-JP-NanamiNeural"},
+    "ko": {"male": "ko-KR-InJoonNeural", "female": "ko-KR-SunHiNeural"},
 }
 
-async def generate_speech_async(text, language, source_language=None):
 
-    os.makedirs("generated_audio", exist_ok=True)
+async def generate_speech_async(text, language, source_language=None):
 
     voice = VOICE_MAPP.get(language, "en-US-AriaNeural")
 
@@ -332,21 +296,42 @@ async def generate_speech_async(text, language, source_language=None):
     tgt = language.upper()
 
     unique_id = str(uuid.uuid4())[:8]
-    filename = f"{src}_TO_{tgt}_{unique_id}.mp3"
+    public_id = f"{src}_TO_{tgt}_{unique_id}"
 
-    file_path = os.path.join("generated_audio", filename)
+    print("====== TTS UPLOAD DEBUG ======")
+    print("Voice:", voice)
+    print("Public ID:", public_id)
+    print("==============================")
+
+    audio_buffer = BytesIO()
 
     communicate = edge_tts.Communicate(text=text, voice=voice)
-    await communicate.save(file_path)
 
-    return filename
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            audio_buffer.write(chunk["data"])
+
+    audio_buffer.seek(0)
+
+    upload_result = cloudinary.uploader.upload(
+        audio_buffer,
+        resource_type="auto",
+        folder="generated_tts_audio",
+        public_id=public_id
+    )
+
+    print("CLOUDINARY CHECK:",
+      os.getenv("CLOUDINARY_NAME"),
+      os.getenv("CLOUDINARY_API_KEY"))
+
+    return {
+        "audio_url": upload_result["secure_url"],
+        "audio_public_id": upload_result["public_id"]
+    }
 
 
 def generate_speech(text, language, source_language=None):
     return asyncio.run(generate_speech_async(text, language, source_language))
-
-
-
 
 
 async def generate_speech_stream_async(text, language, gender="male"):
@@ -356,23 +341,21 @@ async def generate_speech_stream_async(text, language, gender="male"):
         "en-US-AriaNeural"
     )
 
-    print("====== TTS DEBUG ======")
+    print("====== STREAM TTS DEBUG ======")
     print("Language:", language)
     print("Gender:", gender)
     print("Voice:", voice)
-    print("=======================")
+    print("==============================")
 
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-    tmp.close()
+    audio_buffer = BytesIO()
 
     communicate = edge_tts.Communicate(text=text, voice=voice)
-    await communicate.save(tmp.name)
 
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            audio_buffer.write(chunk["data"])
 
-    with open(tmp.name, "rb") as f:
-        audio_bytes = f.read()
-
-    os.remove(tmp.name)
+    audio_bytes = audio_buffer.getvalue()
 
     return base64.b64encode(audio_bytes).decode()
 

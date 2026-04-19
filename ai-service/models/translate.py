@@ -76,7 +76,6 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import traceback
 
-
 MODEL_NAME = "facebook/nllb-200-distilled-600M"
 
 print("Loading model...")
@@ -95,6 +94,7 @@ tokenizer = AutoTokenizer.from_pretrained(
 )
 
 print("Tokenizer loaded (thread-safe)")
+
 
 LANG_MAP = {
     "en": "eng_Latn",
@@ -124,7 +124,6 @@ def translate(text, src, tgt):
         print(f"Source: {src}")
         print(f"Target: {tgt}")
 
-        # 🔁 Convert short code → NLLB code
         src_code = LANG_MAP.get(src)
         tgt_code = LANG_MAP.get(tgt)
 
@@ -135,15 +134,12 @@ def translate(text, src, tgt):
 
         print(f"Converted Codes: {src_code} → {tgt_code}")
 
-        # 🔥 Set source language
         tokenizer.src_lang = src_code
 
-        # 🔥 Tokenize
         inputs = tokenizer(text, return_tensors="pt")
 
         print("Tokenization done")
 
-        # 🔥 Generate translation
         translated_tokens = model.generate(
             **inputs,
             forced_bos_token_id=tokenizer.convert_tokens_to_ids(tgt_code),
@@ -152,7 +148,6 @@ def translate(text, src, tgt):
 
         print(" Model generation complete")
 
-        # 🔥 Decode output
         result = tokenizer.batch_decode(
             translated_tokens,
             skip_special_tokens=True
