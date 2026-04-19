@@ -51,31 +51,6 @@ def translate_api(req: Request):
     }
 
 
-# @app.post("/upload")
-# def upload_from_url(data: UploadRequest):
-
-#     file_url = data.fileUrl
-#     target_language = data.targetLanguage
-
-#     response = requests.get(file_url)
-
-#     temp_file = tempfile.NamedTemporaryFile(delete=False)
-#     temp_file.write(response.content)
-#     temp_file.close()
-
-#     result = process_file(temp_file.name, target_language)
-
-#     os.remove(temp_file.name)
-
-#     return {
-#         "original_text": result["original_text"],
-#         "translated_text": result["translated_text"],
-#         "detected_language": result["detected_language"],
-#         "audio_url": result["audio"]["audio_url"] if result["audio"] else None,
-#         "audio_public_id": result["audio"]["audio_public_id"] if result["audio"] else None
-#     }
-
-
 @app.post("/upload")
 def upload_from_url(data: UploadRequest):
 
@@ -84,7 +59,6 @@ def upload_from_url(data: UploadRequest):
 
     response = requests.get(file_url)
 
-    # 🔥 Extract extension from URL
     ext = file_url.split(".")[-1]
 
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f".{ext}")
