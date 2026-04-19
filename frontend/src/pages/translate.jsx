@@ -330,9 +330,13 @@ const Translate = () => {
               <>
                 <input type="file" onChange={(e) => setFile(e.target.files[0])} />
 
-                <button className="tr-main-btn" onClick={handleFileUpload}>
-                  Upload & Translate
-                </button>
+                  <button
+                    className="tr-main-btn"
+                    onClick={handleFileUpload}
+                    disabled={loading}
+                  >
+                    {loading ? "Translating..." : <><FaLanguage /> Upload & Translate</>}
+                  </button>
               </>
             )}
           </div>
