@@ -4,6 +4,7 @@
     background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
     color: white;
     padding: 20px;
+    padding-bottom: 120px;
     font-family: sans-serif;
 }
 
@@ -25,6 +26,7 @@
     gap: 15px;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 20px; 
 }
 
 .video-box {
@@ -72,16 +74,48 @@
     border-radius: 10px;
 }
 
+/* .participants-box {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+} */
+
+
 .participants-box {
     margin-top: 20px;
     text-align: center;
     padding: 10px;
     background: rgba(255,255,255,0.05);
     border-radius: 10px;
+
+    max-height: 150px;  
+    overflow-y: auto;   
+}
+
+.participants-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.participants-box::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 10px;
+}
+
+.view-more-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #4f46e5;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
 }
 
 .controls {
-    position: fixed;
+    position: sticky;
     bottom: 25px;
     width: 100%;
     display: flex;
@@ -114,6 +148,10 @@
 
     .video-grid {
         grid-template-columns: 1fr;
+    }
+
+     .meeting-room-page {
+        padding-bottom: 140px;
     }
 
     .video-box,

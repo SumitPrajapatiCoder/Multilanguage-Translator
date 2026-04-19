@@ -20,21 +20,7 @@ import {
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const LANG_MAP = {
-    en: "English", hi: "Hindi", mr: "Marathi", ta: "Tamil",
-    te: "Telugu", kn: "Kannada", ml: "Malayalam",
-    bn: "Bengali", gu: "Gujarati", pa: "Punjabi",
-    fr: "French", es: "Spanish", de: "German",
-    ar: "Arabic", zh: "Chinese", ja: "Japanese", ko: "Korean"
-};
 
-const LANG_CODE = {
-    en: "en-US", hi: "hi-IN", mr: "mr-IN", ta: "ta-IN",
-    te: "te-IN", kn: "kn-IN", ml: "ml-IN",
-    bn: "bn-IN", gu: "gu-IN", pa: "pa-IN",
-    fr: "fr-FR", es: "es-ES", de: "de-DE",
-    ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR"
-};
 
 const MeetingRoom = () => {
 
@@ -68,6 +54,25 @@ const MeetingRoom = () => {
     const MySwal = withReactContent(Swal);
     const hasConnectedRef = useRef(false);
 
+
+    const [showAll, setShowAll] = useState(false);
+    const MAX_VISIBLE = 3;
+
+    const LANG_MAP = {
+        en: "English", hi: "Hindi", mr: "Marathi", ta: "Tamil",
+        te: "Telugu", kn: "Kannada", ml: "Malayalam",
+        bn: "Bengali", gu: "Gujarati", pa: "Punjabi",
+        fr: "French", es: "Spanish", de: "German",
+        ar: "Arabic", zh: "Chinese", ja: "Japanese", ko: "Korean"
+    };
+
+    const LANG_CODE = {
+        en: "en-US", hi: "hi-IN", mr: "mr-IN", ta: "ta-IN",
+        te: "te-IN", kn: "kn-IN", ml: "ml-IN",
+        bn: "bn-IN", gu: "gu-IN", pa: "pa-IN",
+        fr: "fr-FR", es: "es-ES", de: "de-DE",
+        ar: "ar-SA", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR"
+    };
 
     const handleTranslation = (msg) => {
 
@@ -336,13 +341,32 @@ const MeetingRoom = () => {
                 <b>Translation:</b> {translatedText}
             </div>
 
-            <div className="participants-box">
+            {/* <div className="participants-box">
                 <h3>Participants ({participants.length})</h3>
                 {participants.map((p, i) => (
                     <div key={i}>
                         👤 {p.name} — 🌐 {LANG_MAP[p.language]}
                     </div>
                 ))}
+            </div> */}
+
+            <div className="participants-box">
+                <h3>Participants ({participants.length})</h3>
+
+                {(showAll ? participants : participants.slice(0, MAX_VISIBLE)).map((p, i) => (
+                    <div key={i}>
+                        👤 {p.name} — 🌐 {LANG_MAP[p.language]}
+                    </div>
+                ))}
+
+                {participants.length > MAX_VISIBLE && (
+                    <button
+                        className="view-more-btn"
+                        onClick={() => setShowAll(!showAll)}
+                    >
+                        {showAll ? "Show Less ▲" : "View More ▼"}
+                    </button>
+                )}
             </div>
 
             <div className="controls">

@@ -291,7 +291,8 @@ const CreateMeeting = () => {
                     <RangePicker
                         showTime
                         style={{ width: "100%" }}
-                        getPopupContainer={(trigger) => trigger.parentNode}
+                        // getPopupContainer={(trigger) => trigger.parentNode}
+                        getPopupContainer={() => document.body}
                         onChange={(value) => {
 
                             if (!value) {
