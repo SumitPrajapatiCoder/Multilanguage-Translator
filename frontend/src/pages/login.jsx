@@ -26,6 +26,7 @@ const Login = () => {
 
             if (res.data.success) {
                 localStorage.setItem("token", res.data.token);
+                console.log("Token:", res.data.token);
                 toast.success("Login Done Successfully!");
                 navigate("/home");
             } else {
