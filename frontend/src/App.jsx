@@ -7,7 +7,7 @@ import Register from "./pages/register";
 import Profile from "./pages/profile";
 import Layout from "./components/layout";
 import Translate from "./pages/translate";
-import History from "./pages/history";
+import History from "./pages/History";
 import CreateMeeting from "./pages/CreateMeeting";
 import JoinMeeting from "./pages/JoinMeeting";
 import JoinById from "./pages/JoinById";
