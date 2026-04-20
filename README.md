@@ -42,7 +42,7 @@ To use the platform, follow these steps:
 
 <img width="407" height="382" alt="image" src="https://github.com/user-attachments/assets/5e200240-1b90-4921-88f1-ac85a9df6955" />
 
-<img width="1337" height="591" alt="image" src="https://github.com/user-attachments/assets/ad53d649-7224-49ca-a4f9-12f8a6c89ab7" />
+<img width="1337" height="555" alt="image" src="https://github.com/user-attachments/assets/64cad0ba-9649-4214-b5a9-b8523de7e285" />
 
 <img width="947" height="296" alt="image" src="https://github.com/user-attachments/assets/86dc990f-8a67-4ab4-affc-120abeb72303" />
 
