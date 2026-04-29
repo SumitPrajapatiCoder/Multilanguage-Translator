@@ -22,6 +22,7 @@ import withReactContent from "sweetalert2-react-content";
 const { RangePicker } = DatePicker;
 
 const CreateMeeting = () => {
+    const BASE_URL = "https://multilanguage-translator-frontend.onrender.com";
 
     const [meetings, setMeetings] = useState([]);
     const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ const CreateMeeting = () => {
 
     const MySwal = withReactContent(Swal);
 
-    /* LOAD MEETINGS */
+   
     const loadMeetings = async () => {
         try {
             const res = await api.get("/api/v1/meeting/list", {
@@ -205,14 +206,14 @@ const CreateMeeting = () => {
             render: (m) => (
                 <Space className="join-link-group">
                     <Input
-                        value={`http://localhost:5173/join/${m.meetingId}`}
+                        value={`${BASE_URL}/join/${m.meetingId}`}
                         readOnly
                     />
                     <Button
                         type="primary"
                         onClick={() => {
                             navigator.clipboard.writeText(
-                                `http://localhost:5173/join/${m.meetingId}`
+                                `${BASE_URL}/join/${m.meetingId}`
                             );
                             toast.success("Link copied");
                         }}
